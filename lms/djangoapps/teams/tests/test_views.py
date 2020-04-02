@@ -1700,7 +1700,7 @@ class TestDetailTopicAPI(TeamAPITestCase):
         As different users, request info about a private_managed team.
         Staff should be able to see all teamsets, and someone enrolled in a private_managed teamset
         should be able to see that and only that teamset. As shown in `test_invalid_topic_id`,
-        nonexistant topics 404, adn if someone doesn't have access to a private_managed teamset, as far as they know
+        nonexistant topics 404, and if someone doesn't have access to a private_managed teamset, as far as they know
         the teamset does not exist.
 
         TODO: staff is correct. sot1ps1 and sot2ps1 should only see their own team. everyone else should 404.
@@ -2377,7 +2377,7 @@ class TestDeleteMembershipAPI(EventTestMixin, TeamAPITestCase):
         Only staff should be able to remove, and all users other than student_on_team_1_private_set_1
         should not be able to tell that the team exists in any way.
 
-        TODO: The only 203 that should remain is student_on_team_1_private_set_1. The other users should not be
+        TODO: The only 403 that should remain is student_on_team_1_private_set_1. The other users should not be
         able to tell that the team exists.
         """
         self.delete_membership(
