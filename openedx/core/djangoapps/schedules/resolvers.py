@@ -18,7 +18,7 @@ from lms.djangoapps.courseware.utils import verified_upgrade_deadline_link, veri
 from lms.djangoapps.discussion.notification_prefs.views import UsernameCipher
 from openedx.core.djangoapps.ace_common.template_context import get_base_template_context
 from openedx.core.djangoapps.schedules.config import COURSE_UPDATE_SHOW_UNSUBSCRIBE_WAFFLE_SWITCH
-from openedx.core.djangoapps.schedules.content_highlights import get_week_highlights
+from openedx.core.djangoapps.schedules.content_highlights import get_week_highlights, get_next_section_highlights
 from openedx.core.djangoapps.schedules.exceptions import CourseUpdateDoesNotExist
 from openedx.core.djangoapps.schedules.message_types import CourseUpdate, InstructorLedCourseUpdate
 from openedx.core.djangoapps.schedules.models import Schedule, ScheduleExperience
@@ -372,7 +372,7 @@ class CourseUpdateResolver(BinnedSchedulesBaseResolver):
                 self.async_send_task.apply_async((self.site.id, str(msg)), retry=False)  # pylint: disable=no-member
 
     def schedules_for_bin(self):
-        week_num = abs(self.day_offset) // 7
+        week_num = abs(self.day_offset) // 7  # TODO: Needs to change as part of AA-68 based on expected course duration
         schedules = self.get_schedules_with_target_date_by_bin_and_orgs(
             order_by='enrollment__course',
         )
@@ -385,6 +385,8 @@ class CourseUpdateResolver(BinnedSchedulesBaseResolver):
 
             try:
                 week_highlights = get_week_highlights(user, enrollment.course_id, week_num)
+                # TODO: Uncomment below and remove above line when enabling AA-68
+                # week_highlights = get_next_section_highlights(user, enrollment.course_id)
             except CourseUpdateDoesNotExist:
                 LOG.warning(
                     u'Weekly highlights for user {} in week {} of course {} does not exist or is disabled'.format(
