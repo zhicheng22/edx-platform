@@ -1020,6 +1020,18 @@ class TestCreateTeamAPI(EventTestMixin, TeamAPITestCase):
     def test_bad_course_data(self, status, data):
         self.post_create_team(status, data)
 
+    def test_bad_topic_id(self):
+        self.post_create_team(
+            404,
+            data=self.build_team_data(topic_id='asdfasdfasdfa'),
+            user='staff'
+        )
+
+    def test_missing_topic_id(self):
+        data = self.build_team_data()
+        data.pop('topic_id')
+        self.post_create_team(400, data=data, user='staff')
+
     def test_student_in_teamset(self):
         response = self.post_create_team(
             400,

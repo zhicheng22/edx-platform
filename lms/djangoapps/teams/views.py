@@ -547,7 +547,7 @@ class TeamsListView(ExpandableFieldViewMixin, GenericAPIView):
         topic_id = request.data.get('topic_id')
         if not topic_id:
             field_errors['topic_id'] = build_api_error(
-                ugettext_noop(u'topic_id is a required argument'),
+                ugettext_noop(u'topic_id is required'),
                 course_id=course_id
             )
             return Response({
