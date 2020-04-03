@@ -1509,19 +1509,19 @@ class TestListTopicsAPI(TeamAPITestCase):
     """Test cases for the topic listing endpoint."""
 
     @ddt.data(
-        (None, 401),
-        ('student_inactive', 401),
-        ('student_unenrolled', 403),
-        ('student_enrolled', 200),
-        ('staff', 200),
-        ('course_staff', 200),
-        ('community_ta', 200),
+        (None, 401, None),
+        ('student_inactive', 401, None),
+        ('student_unenrolled', 403, None),
+        ('student_enrolled', 200, 4),
+        ('staff', 200, 6),
+        ('course_staff', 200, 6),
+        ('community_ta', 200, 4),
     )
     @ddt.unpack
-    def test_access(self, user, status):
+    def test_access(self, user, status, expected_topics_count):
         topics = self.get_topics_list(status, {'course_id': str(self.test_course_1.id)}, user=user)
         if status == 200:
-            self.assertEqual(topics['count'], self.topics_count)
+            self.assertEqual(topics['count'], expected_topics_count)
 
     @ddt.data('A+BOGUS+COURSE', 'A/BOGUS/COURSE')
     def test_invalid_course_key(self, course_id):
@@ -1531,14 +1531,11 @@ class TestListTopicsAPI(TeamAPITestCase):
         self.get_topics_list(400)
 
     @ddt.data(
-        (None, 200, ['Coal Power', 'Nuclear Power', 'private_topic_1_name', 'private_topic_2_name',
-                     u'Sólar power', 'Wind Power'], 'name'),
-        ('name', 200, ['Coal Power', 'Nuclear Power', 'private_topic_1_name', 'private_topic_2_name',
-                       u'Sólar power', 'Wind Power'], 'name'),
+        (None, 200, ['Coal Power', 'Nuclear Power', u'Sólar power', 'Wind Power'], 'name'),
+        ('name', 200, ['Coal Power', 'Nuclear Power', u'Sólar power', 'Wind Power'], 'name'),
         # Note that "Nuclear Power" will have 2 teams. "Coal Power" "Wind Power" and "Solar Power"
         # all have 1 team. The secondary sort is alphabetical by name.
-        ('team_count', 200, ['Nuclear Power', 'Coal Power', u'Sólar power', 'Wind Power',
-                             'private_topic_1_name', 'private_topic_2_name'], 'team_count'),
+        ('team_count', 200, ['Nuclear Power', 'Coal Power', u'Sólar power', 'Wind Power'], 'team_count'),
         ('no_such_field', 400, [], None),
     )
     @ddt.unpack
@@ -1638,10 +1635,10 @@ class TestListTopicsAPI(TeamAPITestCase):
 
     @ddt.unpack
     @ddt.data(
-        ('student_enrolled', 2),
-        ('student_on_team_1_private_set_1', 2),
-        ('student_on_team_2_private_set_1', 2),
-        ('student_masters', 2),
+        ('student_enrolled', 0),
+        ('student_on_team_1_private_set_1', 1),
+        ('student_on_team_2_private_set_1', 1),
+        ('student_masters', 0),
         ('staff', 2)
     )
     def test_teamset_type(self, requesting_user, expected_private_teamsets):
