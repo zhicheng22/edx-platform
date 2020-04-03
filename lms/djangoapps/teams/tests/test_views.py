@@ -1647,9 +1647,6 @@ class TestListTopicsAPI(TeamAPITestCase):
 
         Staff should be able to see both teamsets, and anyone enrolled in a private teamset should see that and
         only that teamset
-
-        TODO: student_enrolled and student_masters should see no private teamsets.
-        sot1ps1 and sot2ps3 should only see their teamset
         """
         topics = self.get_topics_list(
             data={'course_id': self.test_course_1.id},
@@ -1659,6 +1656,23 @@ class TestListTopicsAPI(TeamAPITestCase):
             topic['name'] for topic in topics['results'] if topic['type'] == 'private_managed'
         ]
         self.assertEqual(len(private_teamsets_returned), expected_private_teamsets)
+
+    @ddt.unpack
+    @ddt.data(
+        ('student_on_team_1_private_set_1', 2),
+        ('student_on_team_2_private_set_1', 2),
+        ('staff', 2)
+    )
+    def test_private_teamset_team_count(self, requesting_user, expected_team_count):
+        """
+        TODO: the two students should probably not see that there's another team that they don't see
+        """
+        topics = self.get_topics_list(
+            data={'course_id': self.test_course_1.id},
+            user=requesting_user
+        )
+        private_teamset_1 = [topic for topic in topics['results'] if topic['name'] == 'private_topic_1_name'][0]
+        self.assertEqual(private_teamset_1['team_count'], expected_team_count)
 
 
 @ddt.ddt
