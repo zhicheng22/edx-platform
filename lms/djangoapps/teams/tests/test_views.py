@@ -1981,11 +1981,32 @@ class TestListMembershipAPI(TeamAPITestCase):
         self.get_membership_list(
             404,
             {
-                'teamset_id': 'private-topic-1-id',
+                'teamset_id': 'private_topic_1_id',
                 'course_id': str(self.test_course_1.id),
                 'username': 'student_on_team_1_private_set_1'
             }
         )
+
+    @ddt.unpack
+    @ddt.data(
+        ('student_enrolled', 404, None),
+        ('student_on_team_1_private_set_1', 200, {'student_on_team_1_private_set_1'}),
+        ('student_on_team_2_private_set_1', 200, {'student_on_team_2_private_set_1'}),
+        ('student_masters', 404, None),
+        ('staff', 200, {'student_on_team_1_private_set_1', 'student_on_team_2_private_set_1'})
+    )
+    def test_access_filter_teamset(self, user, expected_response, expected_users):
+        memberships = self.get_membership_list(
+            expected_response,
+            {
+                'teamset_id': 'private_topic_1_id',
+                'course_id': str(self.test_course_1.id),
+            },
+            user=user
+        )
+        if expected_response == 200:
+            returned_users = {membership['user']['username'] for membership in memberships['results']}
+            self.assertEqual(returned_users, expected_users)
 
 
 @ddt.ddt
