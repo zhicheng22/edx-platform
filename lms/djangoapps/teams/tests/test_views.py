@@ -1750,7 +1750,7 @@ class TestListMembershipAPI(TeamAPITestCase):
     @ddt.data(
         (None, 401),
         ('student_inactive', 401),
-        ('student_unenrolled', 404),
+        ('student_unenrolled', 403),
         ('student_enrolled', 200),
         ('student_enrolled_both_courses_other_team', 200),
         ('staff', 200),
@@ -1845,10 +1845,10 @@ class TestListMembershipAPI(TeamAPITestCase):
     @ddt.unpack
     @ddt.data(
         ('student_on_team_1_private_set_1', 200),
-        ('student_unenrolled', 404),
-        ('student_enrolled', 403),
-        ('student_on_team_2_private_set_1', 403),
-        ('student_masters', 403),
+        ('student_unenrolled', 403),
+        ('student_enrolled', 404),
+        ('student_on_team_2_private_set_1', 404),
+        ('student_masters', 404),
         ('staff', 200)
     )
     def test_access_by_team_private_teamset(self, user, expected_response):
@@ -1856,9 +1856,6 @@ class TestListMembershipAPI(TeamAPITestCase):
         As different users, request membership info for team_1_in_private_teamset_1.
         Only staff or users enrolled in a private_managed team should be able to tell that the team exists.
         (a bad team_id returns a 404 currently)
-
-        TODO: No data is returned that shouldn't be, but the 403 that the users get tells them that a team
-        with the given id does in fact exist. This should be changed to be a 404.
         """
         memberships = self.get_membership_list(
             expected_response,
