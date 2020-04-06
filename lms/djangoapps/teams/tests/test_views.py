@@ -1750,7 +1750,7 @@ class TestListMembershipAPI(TeamAPITestCase):
     @ddt.data(
         (None, 401),
         ('student_inactive', 401),
-        ('student_unenrolled', 403),
+        ('student_unenrolled', 404),
         ('student_enrolled', 200),
         ('student_enrolled_both_courses_other_team', 200),
         ('staff', 200),
@@ -1845,7 +1845,7 @@ class TestListMembershipAPI(TeamAPITestCase):
     @ddt.unpack
     @ddt.data(
         ('student_on_team_1_private_set_1', 200),
-        ('student_unenrolled', 403),
+        ('student_unenrolled', 404),
         ('student_enrolled', 404),
         ('student_on_team_2_private_set_1', 404),
         ('student_masters', 404),

@@ -1200,7 +1200,7 @@ class MembershipListView(ExpandableFieldViewMixin, GenericAPIView):
             if requested_course_key is not None and requested_course_key != team.course_id:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             if not has_team_api_access(request.user, team.course_id):
-                return Response(status=status.HTTP_403_FORBIDDEN)
+                return Response(status=status.HTTP_404_NOT_FOUND)
             if not has_specific_team_access(request.user, team):
                 return Response(status=status.HTTP_404_NOT_FOUND)
         elif 'teamset_id' in request.query_params:
