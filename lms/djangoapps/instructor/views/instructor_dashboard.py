@@ -682,7 +682,7 @@ def _section_data_download(course, access):
     )
 
     section_data = {
-        'section_key': 'data_download',
+        'section_key': 'data_download_2',
         'section_display_name': _('Data Download'),
         'access': access,
         'show_generate_proctored_exam_report_button': show_proctored_report_button,
