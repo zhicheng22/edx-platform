@@ -346,7 +346,7 @@ def finish_auth(request):  # pylint: disable=unused-argument
     })
 
 
-@ensure_csrf_cookie
+@csrf_exempt
 @require_http_methods(['POST'])
 def login_user(request):
     """
