@@ -45,7 +45,8 @@ def is_course_run_in_a_program(course_run_key):
     return False
 
 
-def send_grade_if_interesting(user, course_run_key, mode, status, letter_grade, percent_grade, verbose=False):
+def send_grade_if_interesting(user, course_run_key, mode, status, letter_grade, percent_grade, course_cert_data=None,
+                              verbose=False,):
     """ Checks if grade is interesting to Credentials and schedules a Celery task if so. """
 
     if verbose:
@@ -83,7 +84,12 @@ def send_grade_if_interesting(user, course_run_key, mode, status, letter_grade, 
             )
         return
 
-    # Grab mode/status if we don't have them in hand
+    # Grab mode/status from cert call
+    if course_cert_data:
+        key = (user.id, str(course_run_key))
+        mode = course_cert_data[key].get('mode', None)
+        status = course_cert_data[key].get('status', None)
+
     if mode is None or status is None:
         try:
             cert = GeneratedCertificate.objects.get(user=user, course_id=course_run_key)  # pylint: disable=no-member
