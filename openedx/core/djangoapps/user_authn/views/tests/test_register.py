@@ -1117,12 +1117,12 @@ class RegistrationViewTest(ThirdPartyAuthTestMixin, UserAPITestCase):
         field_names = [field["name"] for field in form_desc["fields"]]
         self.assertEqual(field_names, [
             "email",
+            "confirm_email",
             "name",
             "username",
             "password",
             "favorite_movie",
             "favorite_editor",
-            "confirm_email",
             "city",
             "state",
             "country",
@@ -1236,12 +1236,12 @@ class RegistrationViewTest(ThirdPartyAuthTestMixin, UserAPITestCase):
         field_names = [field["name"] for field in form_desc["fields"]]
         self.assertEqual(field_names, [
             "email",
+            "confirm_email",
             "name",
             "username",
             "password",
             "favorite_movie",
             "favorite_editor",
-            "confirm_email",
             "city",
             "state",
             "country",
