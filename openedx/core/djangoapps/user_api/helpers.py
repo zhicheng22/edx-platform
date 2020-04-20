@@ -255,7 +255,12 @@ class FormDescription(object):
         # Any field property can be overwritten (for example, the default value or placeholder)
         field_dict.update(field_override)
 
-        self.fields.append(field_dict)
+        if field_dict['name'] == 'confirm_email':
+            for index, field in enumerate(self.fields):
+                if field['name'] == 'email':
+                    self.fields.insert(index + 1, field_dict)
+        else:
+            self.fields.append(field_dict)
 
     def to_json(self):
         """Create a JSON representation of the form description.
