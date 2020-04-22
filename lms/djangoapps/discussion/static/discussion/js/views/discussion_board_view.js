@@ -134,20 +134,20 @@
 
             goHome: function() {
                 HtmlUtils.append(this.$('.forum-content').empty(), HtmlUtils.template(discussionHomeTemplate)({}));
-                this.$('.forum-nav-thread-list a').removeClass('is-active').find('.sr').remove();
-                this.setupForumDigestSettings(window.user.get('id'))
+                this.$('.forum-nav-thread-list a').removeClass('is-active').find('.sr')
+                  .remove();
+                this.setupForumDigestSettings(window.user.get('id'));
             },
-            setupForumDigestSettings: function(user_id){
-              if (window.ENABLE_FORUM_DAILY_DIGEST === false) {
-                  return
+            setupForumDigestSettings: function(userId) {
+                if (window.ENABLE_FORUM_DAILY_DIGEST === false) {
+                    return ;
                 }
-              this.$('input.email-setting').bind('click', this.discussionThreadListView.updateEmailNotifications);
-              this.getUserNotificationSettings(user_id)
-
+                this.$('input.email-setting').bind('click', this.discussionThreadListView.updateEmailNotifications);
+                this.getUserNotificationSettings(userId);
             },
 
             getUserNotificationSettings: function(user_id) {
-              DiscussionUtil.safeAjax({
+                DiscussionUtil.safeAjax({
                     url: DiscussionUtil.urlFor('notifications_status', user_id),
                     type: 'GET',
                     success: function(response) {

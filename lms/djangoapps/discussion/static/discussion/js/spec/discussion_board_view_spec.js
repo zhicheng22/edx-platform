@@ -1,4 +1,4 @@
-/* globals Discussion, DiscussionCourseSettings */
+/* globals Discussion, DiscussionCourseSettings, DiscussionUser, DiscussionUtil */
 (function(define) {
     'use strict';
     define(
@@ -28,13 +28,13 @@
                     });
                     window.ENABLE_FORUM_DAILY_DIGEST = true;
                     window.user = new DiscussionUser({
-                      id: 99
+                        id: 99
                     });
 
                     return discussionBoardView;
                 };
 
-                describe('goHome view', function () {
+                describe('goHome view', function() {
                     it('Ensure no ajax request when digests are unavailable', function() {
                         var discussionBoardView = createDiscussionBoardView();
                         spyOn(DiscussionUtil, 'safeAjax').and.callThrough();
