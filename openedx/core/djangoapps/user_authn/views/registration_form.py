@@ -422,7 +422,6 @@ class RegistrationFormFactory(object):
         else:
             # Go through the fields in the fields order and add them if they are required or visible
             for field_name in self.field_order:
-                # import pdb;pdb.set_trace()
                 if field_name in self.DEFAULT_FIELDS:
                     self.field_handlers[field_name](form_desc, required=True)
                 elif self._is_field_visible(field_name):
