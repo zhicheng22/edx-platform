@@ -12,13 +12,13 @@ python scripts/xdist/pytest_worker_manager.py -a up -n ${XDIST_NUM_WORKERS} \
 
 # Install the correct version of Django depending on which tox environment (if any) is in use
 if [[ -z ${TOXENV+x} ]] || [[ ${TOXENV} == 'null' ]]; then
-    DJANGO_REQUIREMENT="-r requirements/edx/django.txt"
+    DJANGO_REQUIREMENT="requirements/edx/django.txt"
 elif [[ ${TOXENV} == *'django20'* ]]; then
-    DJANGO_REQUIREMENT="-r requirements/edx/django20.txt"
+    DJANGO_REQUIREMENT="requirements/edx/django20.txt"
 elif [[ ${TOXENV} == *'django21'* ]]; then
-    DJANGO_REQUIREMENT="-r requirements/edx/django21.txt"
+    DJANGO_REQUIREMENT="requirements/edx/django21.txt"
 elif [[ ${TOXENV} == *'django22'* ]]; then
-    DJANGO_REQUIREMENT="-r requirements/edx/django.txt"
+    DJANGO_REQUIREMENT="requirements/edx/django.txt"
 fi
 
 ip_list=$(<pytest_worker_ips.txt)
@@ -30,7 +30,8 @@ do
     rm -rf /home/jenkins/edx-venv-${PYTHON_VERSION}/edx-venv;
     tar -C /home/jenkins/edx-venv-${PYTHON_VERSION} -xf /home/jenkins/edx-venv_clean-${PYTHON_VERSION}.tar.gz;
     source ../edx-venv-${PYTHON_VERSION}/edx-venv/bin/activate;
-    pip install -q ${DJANGO_REQUIREMENT} -r requirements/edx/testing.txt; mkdir reports' & "
+    pip install -qr requirements/edx/pip-tools.txt;
+    pip-sync ${DJANGO_REQUIREMENT} requirements/edx/testing.txt; mkdir reports' & "
 
     cmd=$cmd$worker_reqs_cmd
 done
