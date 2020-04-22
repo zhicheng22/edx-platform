@@ -350,7 +350,11 @@ class RegistrationFormFactory(object):
         field_order = configuration_helpers.get_value('REGISTRATION_FIELD_ORDER')
         if not field_order:
             field_order = settings.REGISTRATION_FIELD_ORDER or valid_fields
-        # Check that all of the valid_fields are in the field order and vice versa, if not set to the default order
+        # Check that all of the valid_fields are in the field order and vice versa,
+        # if not append missing fields at end of field order
+        if set(valid_fields) != set(field_order):
+            difference = set(valid_fields).difference(set(field_order))
+            field_order.extend(difference)
 
         self.field_order = field_order
 
@@ -418,6 +422,7 @@ class RegistrationFormFactory(object):
         else:
             # Go through the fields in the fields order and add them if they are required or visible
             for field_name in self.field_order:
+                # import pdb;pdb.set_trace()
                 if field_name in self.DEFAULT_FIELDS:
                     self.field_handlers[field_name](form_desc, required=True)
                 elif self._is_field_visible(field_name):
