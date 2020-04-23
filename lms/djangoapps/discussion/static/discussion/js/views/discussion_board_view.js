@@ -140,15 +140,15 @@
             },
             setupForumDigestSettings: function(userId) {
                 if (window.ENABLE_FORUM_DAILY_DIGEST === false) {
-                    return ;
+                    return;
                 }
                 this.$('input.email-setting').bind('click', this.discussionThreadListView.updateEmailNotifications);
                 this.getUserNotificationSettings(userId);
             },
 
-            getUserNotificationSettings: function(user_id) {
+            getUserNotificationSettings: function(userId) {
                 DiscussionUtil.safeAjax({
-                    url: DiscussionUtil.urlFor('notifications_status', user_id),
+                    url: DiscussionUtil.urlFor('notifications_status', userId),
                     type: 'GET',
                     success: function(response) {
                         $('input.email-setting').prop('checked', response.status);
